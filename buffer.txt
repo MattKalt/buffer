@@ -1,0 +1,19 @@
+t ? 0 : bf = Array(512).fill(0),
+
+t2 = t,
+
+re = async function (chunkSize = 256) {
+	nextChunk = ceil( ( t2 % bf.length ) / chunkSize) * chunkSize; 
+	for (i=nextChunk; i < nextChunk + chunkSize; i++) {
+		t = i + ( 0 | (t / bf.length) ) * bf.length;
+		bf[ i % bf.length] =
+
+9*t&t>>4|5*t&t>>7|3*t&t>>10
+//9*i&i>>4|5*i&i>>7|3*i&i>>10
+		
+	}
+},
+
+t2 % 256 ? 0 : re(256),
+
+bf[ t2 % bf.length]
