@@ -1,23 +1,35 @@
 t ? 0 : bf = Array(512).fill(0),
 
-t2 = t,
+t2 = t, // don't alter before this
 
-t *= .25,
+t *= .25, //changing t does nothing
 
-re = async function (chunkSize = 256, rate=1, pitch=1) {
-	nextChunk = ceil( ( t2 % bf.length ) / chunkSize) * chunkSize; 
-	r = pitch / rate;
+re = async function (chunkSize = 256, tempo=1, pitch=1) {
+	b = bf.length;
+	nextChunk = ceil( ( t2 % b ) / chunkSize) * chunkSize; 
+	r = tempo / pitch;
 	for (i=nextChunk; i < nextChunk + chunkSize; i++) {
-		t = i + ( 0 | (t2 * rate / bf.length) ) * bf.length;
-		t *= r;
-		bf[ i % bf.length] =
+		t = i + ( 0 | (t2 * r / b) ) * b;
+		t *= pitch;
+		bf[ i % b] =
+(
+
+// ----------------CODE TO BUFFER GOES HERE----------------
+// \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+// -------------------------------------------------------
 
 9*t&t>>4|5*t&t>>7|3*t&t>>10
-//9*i&i>>4|5*i&i>>7|3*i&i>>10
-		
+	
+// -------------------------------------------------------
+// /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+// ----------------CODE TO BUFFER GOES HERE----------------
+
+)
+	
 	}
 },
 
-t2 % 256 ? 0 : re(256, 1, .5),
+
+t2 % 256 ? 0 : re(256, 7.9/48, 7.9/48),
 
 bf[ t2 % bf.length]
