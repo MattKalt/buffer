@@ -5,31 +5,40 @@ t2 = t, // don't alter before this
 t *= .25, //changing t does nothing
 
 re = async function (chunkSize = 256, tempo=1, pitch=1) {
-	b = bf.length;
-	nextChunk = ceil( ( t2 % b ) / chunkSize) * chunkSize; 
-	r = tempo / pitch;
-	for (i=nextChunk; i < nextChunk + chunkSize; i++) {
-		t = i + ( 0 | (t2 * r / b) ) * b;
-		t *= pitch;
-		bf[ i % b] =
+	if (t2 % chunkSize == 0) {
+		b = bf.length;
+		n = ceil( ( t2 % b ) / chunkSize) * chunkSize; //start of next chunk
+		r = tempo / pitch;
+		for (i = n; i < n + chunkSize; i++) {
+			t = i + ( 0 | (t2 * r / b) ) * b;
+			t *= pitch;
+			bf[ i % b] =
 (
 
 // ----------------CODE TO BUFFER GOES HERE----------------
 // \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
 // -------------------------------------------------------
 
-9*t&t>>4|5*t&t>>7|3*t&t>>10
+a =9*t&t>>4|5*t&t>>7|3*t&t>>10,
+
+[a,a*2]
 	
 // -------------------------------------------------------
 // /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
 // ----------------CODE TO BUFFER GOES HERE----------------
 
 )
-	
+		}	
 	}
 },
 
 
-t2 % 256 ? 0 : re(256, 7.9/48, 7.9/48),
+re(256, 8/48, 8/48),
 
-bf[ t2 % bf.length]
+//for mono:
+//bf[ t2 % bf.length]
+
+//for stereo:
+a = bf[ t2 % bf.length],
+[ a[0], a[1] ]
+
